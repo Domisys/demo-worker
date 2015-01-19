@@ -48,27 +48,39 @@ class GetCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $host = $input->getOption('host');
+        $port = $input->getOption('port');
+        $user = $input->getOption('user');
+        $pass = $input->getOption('password');
+        $vhost = $input->getArgument('vhost');
+        
+        $queue = $input->getArgument('queue');
+        
         if ('ext' === $input->getOption('provider')) {
             $connection = new \AMQPConnection([
-                'vhost' => $input->getArgument('vhost')
+                'vhost' => $vhost
             ]);
+            $connection->setHost($host);
+            $connection->setPort($port);
+            $connection->setLogin($user);
+            $connection->setPassword($pass);
             $connection->connect();
             $channel = new \AMQPChannel($connection);
             $queue = new \AMQPQueue($channel);
-            $queue->setName($input->getArgument('queue'));
+            $queue->setName($queue);
 
             $messageProvider = new PeclPackageMessageProvider($queue);
         } elseif ('lib' === $input->getOption('provider')) {
             $connection = new AMQPConnection(
-                $input->getOption('host'),
-                $input->getOption('port'),
-                $input->getOption('user'),
-                $input->getOption('password'),
-                $input->getArgument('vhost')
+                $host,
+                $port,
+                $user,
+                $pass,
+                $vhost
             );
             $messageProvider = new PhpAmqpLibMessageProvider(
                 $connection->channel(),
-                $input->getArgument('queue')
+                $queue
             );
         }
 
