@@ -17,6 +17,9 @@
         "symfony/monolog-bridge": "~2.5",
         "videlalvaro/php-amqplib": "~2.4"
     },
+    "require-dev" : {
+        "empi89/php-amqp-stubs": "dev-master"
+    },
     "autoload": {
         "psr-0": {
             "Swarrot": "src"

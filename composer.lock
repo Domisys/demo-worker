@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "635856d56404a07e7bdef31c9e3786b8",
+    "hash": "3e7ca954f7aa9a320e1508e0d573e1a7",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -451,10 +451,51 @@
             "time": "2014-10-06 11:00:55"
         }
     ],
-    "packages-dev": [],
+    "packages-dev": [
+        {
+            "name": "empi89/php-amqp-stubs",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/empi89/php-amqp-stubs.git",
+                "reference": "f8f402e81edf56871fa7192df01b8e47f29e2e13"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/empi89/php-amqp-stubs/zipball/f8f402e81edf56871fa7192df01b8e47f29e2e13",
+                "reference": "f8f402e81edf56871fa7192df01b8e47f29e2e13",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "": "src"
+                },
+                "files": [
+                    "src/AMQP.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "PHP"
+            ],
+            "description": "pdezwart/php-amqp stubs via packagist",
+            "homepage": "http://github.com/empi89/php-amqp-stubs",
+            "keywords": [
+                "AMQP",
+                "testing"
+            ],
+            "time": "2014-07-17 15:28:25"
+        }
+    ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "empi89/php-amqp-stubs": 20
+    },
     "prefer-stable": false,
     "platform": [],
     "platform-dev": []
