@@ -46,27 +46,42 @@ class PublishCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $host = $input->getOption('host');
+        $port = $input->getOption('port');
+        $user = $input->getOption('user');
+        $pass = $input->getOption('password');
+        $vhost = $input->getArgument('vhost');
+        
+        $exchangeName = $input->getArgument('exchange');
+        
         if ('ext' === $input->getOption('provider')) {
             $connection = new \AMQPConnection([
-                'vhost' => $input->getArgument('vhost')
+                'vhost' => $vhost
             ]);
+            $connection->setHost($host);
+            $connection->setPort($port);
+            $connection->setLogin($user);
+            $connection->setPassword($pass);
+        
             $connection->connect();
+        
             $channel = new \AMQPChannel($connection);
-            $queue = new \AMQPExchange($channel);
-            $queue->setName($input->getArgument('exchange'));
-
-            $messagePublisher = new PeclPackageMessagePublisher($queue);
+        
+            $exchange = new \AMQPExchange($channel);
+            $exchange->setName($exchangeName);
+        
+            $messagePublisher = new PeclPackageMessagePublisher($exchange);
         } elseif ('lib' === $input->getOption('provider')) {
             $connection = new AMQPConnection(
-                $input->getOption('host'),
-                $input->getOption('port'),
-                $input->getOption('user'),
-                $input->getOption('password'),
-                $input->getArgument('vhost')
+                    $host,
+                    $port,
+                    $user,
+                    $pass,
+                    $vhost
             );
             $messagePublisher = new PhpAmqpLibMessagePublisher(
                 $connection->channel(),
-                $input->getArgument('exchange')
+                $exchangeName
             );
         }
 

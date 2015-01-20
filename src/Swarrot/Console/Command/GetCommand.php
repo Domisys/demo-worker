@@ -54,7 +54,7 @@ class GetCommand extends Command
         $pass = $input->getOption('password');
         $vhost = $input->getArgument('vhost');
         
-        $queue = $input->getArgument('queue');
+        $queueName = $input->getArgument('queue');
         
         if ('ext' === $input->getOption('provider')) {
             $connection = new \AMQPConnection([
@@ -64,11 +64,14 @@ class GetCommand extends Command
             $connection->setPort($port);
             $connection->setLogin($user);
             $connection->setPassword($pass);
+            
             $connection->connect();
+            
             $channel = new \AMQPChannel($connection);
+            
             $queue = new \AMQPQueue($channel);
-            $queue->setName($queue);
-
+            $queue->setName($queueName);
+            
             $messageProvider = new PeclPackageMessageProvider($queue);
         } elseif ('lib' === $input->getOption('provider')) {
             $connection = new AMQPConnection(
@@ -80,11 +83,11 @@ class GetCommand extends Command
             );
             $messageProvider = new PhpAmqpLibMessageProvider(
                 $connection->channel(),
-                $queue
+                $queueName
             );
         }
 
-        // We create a basic processor which use \SwiftMailer to send mails
+        // We create a basic processor which use Console Logger to output messages
         $processor = new DumbProcessor(
             !$input->getOption('fail'),
             $this->logger
@@ -96,6 +99,7 @@ class GetCommand extends Command
             ->push('Swarrot\Processor\MaxExecutionTime\MaxExecutionTimeProcessor', $this->logger)
             ->push('Swarrot\Processor\Ack\AckProcessor', $messageProvider, $this->logger)
             ->push('Swarrot\Processor\InstantRetry\InstantRetryProcessor', $this->logger)
+            //->push('Swarrot\Processor\Retry\RetryProcessor', $this->logger)
         ;
 
         // We can now create a Consumer with a message Provider and a Processor
